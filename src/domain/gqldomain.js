@@ -12,15 +12,15 @@ module.exports = class gqlDomain {
         let q = uow.query('gql')
         return _isPromise(q) ? q.then(c => {
             return _getAll(c);
-        }) :  _getAll(q);
-        
+        }) : _getAll(q);
+
     }
-
-
-
 }
 
 function _getAll(c) {
     let gql = new gqlRepository(c);
-    return gql.findAll().then(r => { console.log(r); return r; });
+    return gql.findAll().then(r => {
+        console.log(r);
+        return r;
+    });
 }

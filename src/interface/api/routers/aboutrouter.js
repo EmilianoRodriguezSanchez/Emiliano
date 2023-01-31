@@ -3,5 +3,6 @@ const aboutcontroller = require('../controllers/aboutcontroller')
 
 
 module.exports = (router) => {
-    router.get('/about', (req,res) => aboutcontroller.getabout(req,res))
+    
+    router.get('/v1/about', (req,res) => aboutcontroller.getabout(req,res))
 }

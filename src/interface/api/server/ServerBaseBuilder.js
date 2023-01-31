@@ -1,7 +1,8 @@
 'use strict'
-const express = require('express')
-const app = express()
 
+const express = require('express')
+
+var app = module.exports = express();
 const router  = express.Router();
 
 const ServerBase = require("./serverBase");

@@ -59,7 +59,9 @@ global._isEquals = (x, y, strict = false) => {
     return true;
 }
 
-
+global._isPromise = (p) => {
+    return p && Object.prototype.toString.call(p) === "[object Promise]";
+  }
 global._isValidate = (schema, jsonData) => {
     try {
         if (!_isObject(schema)) return

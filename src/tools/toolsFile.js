@@ -1,6 +1,7 @@
 'use strict'
 let fs = require('fs');
 let path = require('path');
+global.__basedir = path.resolve("./");
 
 global._getFiles = (directoryPath) => {
     if (fs.existsSync(directoryPath)) {

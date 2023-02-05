@@ -9,13 +9,13 @@ module.exports = class ConnectMongoDB extends ConnectBase {
         this.uri = process.env.DB_URI;
         this.client = new MongoClient(this.uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-       
+
         this.isConnection = false;
         this.onConnection().then(db => {
             this.db = db
         })
     }
-
+   
     onConnection() {
         if (!this.isConnection) {
             this.connection = new Promise((resolve, reject) => {
@@ -36,15 +36,22 @@ module.exports = class ConnectMongoDB extends ConnectBase {
     getCollection(collectionName) {
         super.getCollection(collectionName);
         if (!this.isConnection) {
-           return this.onConnection().then(db => {
-                return db.collection(collectionName)
+            return this.onConnection().then(db => {
+                return db.collection(collectionName).find().toArray()
+                    .then(data => {
+                        console.log(data);
+                        return JSON.parse( JSON.stringify(data));
+                    });
                 //let collection = new CRUDCollection(_db, table)
             }).catch(error => {
                 console.error('Connection to MongoDB Atlas failed!', error);
                 return error
             });
         }
-        return this.db.collection(collectionName)
+        return this.db.collection(collectionName).find().toArray().then(data => {
+            console.log(data);
+            return data
+        });
 
     }
 
@@ -53,7 +60,7 @@ module.exports = class ConnectMongoDB extends ConnectBase {
             .then(db => db.listCollections().toArray())
             .then(cols => {
                 console.log("Collections", cols);
-                return cols;
+                return cols.map(d => d.name);
             })
             //.finally(() => this.client.close())
             .catch(error => {

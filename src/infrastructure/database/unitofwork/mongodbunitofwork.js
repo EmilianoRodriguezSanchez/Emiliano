@@ -1,20 +1,33 @@
 'use strict'
+const Mapper = require('../../../mapper');
+const User = require('../../../entities/user');
+const MapperBuilder = require('../../../mapper/mapperBuilder');
 
 class MongoDBUnitOfWork {
     constructor(connection) {
         this.cn = connection;
         this.session;
-       /* this.cn.getCollections().then(c =>
-            {
-               this.collectionNames= c.map(x => x.name)
-            } );
-        */
+        /* this.cn.getCollections().then(c =>
+             {
+                this.collectionNames= c.map(x => x.name)
+             } );
+         */
     }
 
     query(collectionName) {
-        let db = this.cn.getCollection(collectionName);
-        return _isPromise(db) ? db.then(c =>  c ) : db
+        try {
+            let db = this.cn.getCollection(collectionName);
+            return _isPromise(db) ? db.then(data => {
+                console.log(data);
+                var Mapper = new MapperBuilder().setData(data).build();
+                return Mapper.build()
+            })
+                : (new MapperBuilder().setData(data).build()).build()
+        } catch (error) {
+//TODO
+            console.log(error);
         }
+    }
 
     async startTrasaction() {
 

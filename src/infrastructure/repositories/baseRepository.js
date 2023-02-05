@@ -9,7 +9,7 @@ class BaseRepository {
     }
 
     async get(id){
-        return await this.collection.findById(id);
+        return await this.collection.find(e => e._id===id);
     }
 
 
@@ -27,8 +27,8 @@ class BaseRepository {
     }
 
 
-    async findAll(){
-        return await this.collection.find();
+    findAll(){
+        return this.collection;
     }
     
 }

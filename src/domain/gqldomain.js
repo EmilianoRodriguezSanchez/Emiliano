@@ -2,25 +2,42 @@
 
 const UnitOfWorkFactory = require('../infrastructure/database/unitofwork/unitofworkfactory');
 const gqlRepository = require('../infrastructure/repositories/gqlRepository');
-const RepositoryBase = require('../infrastructure/repositories/baseRepository');
+
+
 
 module.exports = class gqlDomain {
-    constructor() { }
+    constructor() {
+        this.uow = UnitOfWorkFactory.create();
+        this.q = this.uow.query('gql')
+        //this.collection = getRepository(this.q);
+    }
 
     findAll() {
-        let uow = UnitOfWorkFactory.create();
-        let q = uow.query('gql')
-        return _isPromise(q) ? q.then(c => {
-            return _getAll(c);
-        }) : _getAll(q);
-
+        try {
+            if (_isPromise(this.q)) {
+                return this.q.then(c => new gqlRepository(c).findAll())
+            }
+            else {
+                return new gqlRepository(this.q).findAll()
+            }
+        } catch (error) {
+            
+        } 
+        /*finally{
+            this.uow.cn.onClose()
+        }*/
+        
     }
-}
 
-function _getAll(c) {
-    let gql = new gqlRepository(c);
-    return gql.findAll().then(r => {
-        console.log(r);
-        return r;
-    });
+    getId(id) {
+        if (_isPromise(this.q)) {
+            return this.q.then(c => {
+                let gql = new gqlRepository(c)
+                return gql.get(id)
+            });
+        }
+
+        else
+            return new gqlRepository(this.q).get(id)
+    }
 }

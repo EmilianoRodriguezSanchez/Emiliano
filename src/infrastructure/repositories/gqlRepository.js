@@ -11,7 +11,7 @@ class gqlRepository extends BaseRepository {
     }
 
     findAll() {
-        return this.collection.find().toArray();
+        return this.collection;
     }
 
     create(entity) {

@@ -1,0 +1,7 @@
+ {
+    "target": "user",  
+    "source": "gql",
+    "map":{
+        "id": "(source) => source._id.toString()"
+    }
+ }

@@ -11,42 +11,58 @@ module.exports = class ConnectMongoDB extends ConnectBase {
 
 
         this.isConnection = false;
-        this.onConnection().then(db => {
+        //this.db = this.onConnection();
+        /*this.onConnection().then(db => {
             this.db = db
-        })
+        })*/
     }
-   
-    onConnection() {
+
+    async onConnection() {
         if (!this.isConnection) {
-            this.connection = new Promise((resolve, reject) => {
-                console.log('Connecting to MongoDB Atlas cluster...');
-                this.client.connect().then(r => {
-                    console.log('Successfully connected to MongoDB Atlas!');
-                    this.isConnection = true;
-                    resolve(this.client.db(this.dbName));
-                }).catch(error => {
-                    console.error('Connection to MongoDB Atlas failed!', error);
-                    reject('Connection to MongoDB Atlas failed!');
-                })
-            })
+            //this.connection = new Promise((resolve, reject) => {
+            console.log('Connecting to MongoDB Atlas cluster...');
+            await this.client.connect();
+            console.log('Successfully connected to MongoDB Atlas!');
+            this.isConnection = true;
+            this.connection = this.client.db(this.dbName)
+
+            /*      this.client.connect().then(r => {
+                      console.log('Successfully connected to MongoDB Atlas!');
+                      this.isConnection = true;
+                      this.client.db(this.dbName)
+                  });
+            */
+
+            //       resolve(this.client.db(this.dbName));
+            //   }).catch(error => {
+            //       console.error('Connection to MongoDB Atlas failed!', error);
+            //       reject('Connection to MongoDB Atlas failed!');
+            //   })
+            //})
         }
         return this.connection;
     }
 
-    getCollection(collectionName) {
+    async getCollection(collectionName) {
         super.getCollection(collectionName);
         if (!this.isConnection) {
-            return this.onConnection().then(db => {
-                return db.collection(collectionName).find().toArray()
+            try {
+                this.db = await this.onConnection();
+                //return this.onConnection().then(db => {
+                return this.db.collection(collectionName).find().toArray()
                     .then(data => {
                         console.log(data);
-                        return JSON.parse( JSON.stringify(data));
+                        return JSON.parse(JSON.stringify(data));
                     });
                 //let collection = new CRUDCollection(_db, table)
-            }).catch(error => {
+                //}).catch(error => {
+                //console.error('Connection to MongoDB Atlas failed!', error);
+                //return error
+                //});
+            } catch (error) {
                 console.error('Connection to MongoDB Atlas failed!', error);
                 return error
-            });
+            }
         }
         return this.db.collection(collectionName).find().toArray().then(data => {
             console.log(data);

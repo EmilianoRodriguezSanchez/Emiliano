@@ -1,11 +1,22 @@
-'use strict'
-const gqlService = require('../services/gqlservice')
+'use string';
+const Saludo = require("../entities/saludo");
 
+// The root provides a resolver function for each API endpoint
+var resolvers = {
+  user: async (args, context, info) => {
+    var gqlService = require("../services/gqlservice");
+    return await new gqlService().getGqlId(args.id);
 
-const resolvers = {
-    GQL: {
-      user:  new gqlService().getGqlId()
-    }
-}
+  },
+  users: async (args, context, info) => {
+    var gqlService = require("../services/gqlservice");
+    return await new gqlService().getGqls();
 
-module.export = resolvers
+  },
+  hello: (args, context, info) => {
+    let s = new Saludo();
+    s.mesage = args.name + '  Hello world!' + args.value;
+    return s;
+  },
+};
+exports.resolvers = resolvers;

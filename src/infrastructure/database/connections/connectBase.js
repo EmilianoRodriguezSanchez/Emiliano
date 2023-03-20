@@ -11,6 +11,7 @@ module.exports = class ConnectBase {
     }
 
     getCollection(collectionName) {
+        console.log(`collection: ${collectionName}:` )
         this.collectionName = collectionName;
     }
 

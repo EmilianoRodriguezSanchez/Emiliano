@@ -59,7 +59,7 @@ const schemaToString = (typeName, prefix, obj) => {
             //const newTypeName = `${prefix}${key}`;
             // str += schemaToString(newTypeName, prefix, obj[key]);
             var args = getParamNames(func).map(e => `${e.key}: ${transformPrimitive(e.value)}`).join(', ')
-            return args ? `${prefix}${key}(${args}): ${type(func())}` : `${prefix}${key}: ${type(func())}`;
+            return !_isEmpty(args) ? `${prefix}${key}(${args}): ${type(func())}` : `${prefix}${key}: ${type(func())}`;
         }
         if (_isObject(obj[key])) {
             const newTypeName = `${prefix}${toPascalCase(key)}`;
@@ -89,8 +89,11 @@ const schemaToString = (typeName, prefix, obj) => {
 }
 
 const type = (obj) => {
+    if (_isArray(obj)){
+       return  `[${type(obj[0])}]`
+    }
     var str = (obj.prototype ? obj.prototype.constructor : obj.constructor).toString();
-    var cname = str.match(/class\s(\w*)/)[1];
+    var cname =/class\s(\w*)/.test(str) ? str.match(/class\s(\w*)/)[1]: "";
     var aliases = ["", "anonymous", "Anonymous"];
     return aliases.indexOf(cname) > -1 ? "class" : cname;
 }

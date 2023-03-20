@@ -25,8 +25,8 @@ const https = new httpsServerBuilder().setHost('0.0.0.0').setPort(443).setOnConn
 //config(https.app);
 routers(https.app);
 https.listen();
-
+*/
 
 const httpgpq = new httpGraphqlBuilder().setHost('0.0.0.0').setPort(4000).setOnConnection().build();
 routers(httpgpq.app);
-httpgpq.listen();*/
+httpgpq.listen();

@@ -7,7 +7,8 @@
     "express": "^4.18.2",
     "express-graphql": "^0.12.0",
     "graphql": "^15.8.0",
-    "mongodb": "^4.13.0"
+    "mongodb": "^4.13.0",
+    "sqlite3": "^5.1.4"
   },
   "name": "microservicio-gql",
   "description": "api graphql and api rest",
